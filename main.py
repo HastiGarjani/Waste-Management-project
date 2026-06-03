@@ -22,14 +22,14 @@ def cost(n_black_op, n_yellow, n_black):
         cost_per_black_bag = 0.3
         return n_black_op*cost_per_black_op_bag + n_yellow*cost_per_yellow_bag + n_black*cost_per_black_bag
 
-def Scenario(Total_waste, key, defaults):
+def Scenario(Total_waste, key, defaults, labels):
 
     st.write("\n\nTotal Waste:" + str(Total_waste) + "(g)")
 
     bottom_cols = st.columns([1,1,1,4,4], gap = "small", width = 1200)
     with bottom_cols[0]:
         n_black_op_before = vertical_slider(
-            label="Black-OP",
+            label=labels[0],
             height=150,
             key=key[0],
             default_value=defaults[0],
@@ -42,7 +42,7 @@ def Scenario(Total_waste, key, defaults):
 
     with bottom_cols[1]:
         n_yellow_before = vertical_slider(
-            label="Yellow bags",
+            label=labels[1],
             height=150,
             key=key[1],
             default_value=defaults[1],
@@ -55,7 +55,7 @@ def Scenario(Total_waste, key, defaults):
     default_3 = Total_waste - (n_black_op_before+n_yellow_before)
     with bottom_cols[2]:
         n_black_before = vertical_slider(
-            label="Black bags",
+            label=labels[2],
             height=150,
             key=f"{key[2]}_{n_black_op_before}_{n_yellow_before}",
             default_value=default_3,
@@ -79,14 +79,17 @@ def Scenario(Total_waste, key, defaults):
     return n_black_op_before, n_yellow_before, n_black_before, Total_waste,cost_before, n_per_year
 st.subheader("Waste management before intervention")
 Scenario(TOTAL_WASTE_no_Int, ["S1_0", "S1_1", "S1_2", "S1_3"],
-         [int(waste['mean_biohazard_waste_no_intervention'][0]), int(waste['mean_yellow_waste_no_intervention'][0]), int(waste['mean_annesthesia_waste_no_intervention'][0])])
+         [int(waste['mean_biohazard_waste_no_intervention'][0]), int(waste['mean_yellow_waste_no_intervention'][0]), int(waste['mean_annesthesia_waste_no_intervention'][0])],
+         labels=["Black-OP", "Yellow bags", "Black bags"])
 
 st.subheader("Waste management after intervention (training and proper labeling)")
 Scenario(TOTAL_WASTE_with_Int, ["S2_0", "S2_1", "S2_2", "S2_3"],
-         [int(waste['mean_biohazard_waste_with_intervention'][0]), int(waste['mean_yellow_waste_with_intervention'][0]), int(waste['mean_annesthesia_waste_with_intervention'][0])])
+         [int(waste['mean_biohazard_waste_with_intervention'][0]), int(waste['mean_yellow_waste_with_intervention'][0]), int(waste['mean_annesthesia_waste_with_intervention'][0])],
+         labels=["Black-OP (Hazardous)", "Yellow bags (Recyclable)", "Black bags (Anesthesia related)"])
 st.subheader("Produced waste at a random inspection")
 eval = Scenario(TOTAL_WASTE_with_Int, ["S3_0", "S3_1", "S3_2", "S3_3"],
-         [int(waste['mean_biohazard_waste_with_intervention'][0])+500, int(waste['mean_yellow_waste_with_intervention'][0]), int(waste['mean_annesthesia_waste_with_intervention'][0])])
+         [int(waste['mean_biohazard_waste_with_intervention'][0])+500, int(waste['mean_yellow_waste_with_intervention'][0]), int(waste['mean_annesthesia_waste_with_intervention'][0])],
+         labels=["Black-OP (Hazardous)", "Yellow bags (Recyclable)", "Black bags (Anesthesia related)"])
 if (eval[0]/eval[3]) > 0.05+int(waste['mean_biohazard_waste_with_intervention'][0])/TOTAL_WASTE_with_Int:
     
     st.markdown("<span style='color:#b30000;font-weight:500'>The hospital is not compliant with the regulations.</span>", unsafe_allow_html=True)
