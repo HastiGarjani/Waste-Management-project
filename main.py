@@ -4,7 +4,7 @@ import pandas as pd
 import math
 from streamlit_vertical_slider import vertical_slider
 
-waste = pd.read_csv("nonGit/data/waste.csv")
+waste = pd.read_csv("data/waste.csv")
 # Scenario 1
 
 st.set_page_config(layout="wide")
