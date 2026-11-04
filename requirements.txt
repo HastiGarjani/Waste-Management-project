@@ -2,3 +2,4 @@ streamlit
 numpy
 streamlit-vertical-slider
 streamlit-toggle
+toml
